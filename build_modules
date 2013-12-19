@@ -24,8 +24,15 @@ PATH=${AM1808_COMPILER}:$PATH
 
 echo ${PATH}
 
-if [ ! -e modules ]; then
-  mkdir -p ./modules
+if [ ! -f ${AM1808_KERNEL}/include/config/kernel.release ]; then
+	echo "Kernel not compiled?"
+	exit 1
+fi
+
+AM1808_KERNEL_RELEASE="$(cat ${AM1808_KERNEL}/include/config/kernel.release)"
+
+if [ ! -e ./modules/lib/modules/${AM1808_KERNEL_RELEASE}/updates ]; then
+  mkdir -p ./modules/lib/modules/${AM1808_KERNEL_RELEASE}/updates
 fi
 
 for module in "ev3dev" "ui" "pwm"
@@ -36,7 +43,7 @@ do
     echo "Now we're in $(pwd)"
     make -C ${AM1808_KERNEL} M=`pwd` MOD=${module} ARCH=arm CROSS_COMPILE=${AM1808_ABI} modules
     cd ${project}
-    cp ../ev3dev-modules/lms2012/d_${module}/Linuxmod_AM1808/*.ko ./modules
+    cp ../ev3dev-modules/lms2012/d_${module}/Linuxmod_AM1808/*.ko ./modules/lib/modules/${AM1808_KERNEL_RELEASE}/updates/
 done
 
 #    make -C ${AM1808_KERNEL} MOD=${module} M=`pwd` ARCH=arm CROSS_COMPILE=${AM1808_ABI} modules

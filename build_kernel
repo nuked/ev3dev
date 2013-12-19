@@ -46,8 +46,8 @@ fi
 if [ "$1" = "modules_install" ]
 then
   make modules_install ARCH=arm CROSS_COMPILE=${AM1808_ABI} INSTALL_MOD_PATH=${project}/modules
-  rm ${project}/modules/lib/modules/3.3.0/build
-  rm ${project}/modules/lib/modules/3.3.0/source
+  rm ${project}/modules/lib/modules/3.3.0+/build
+  rm ${project}/modules/lib/modules/3.3.0+/source
 
 # mkdir -p ${project}/modules/lib/modules/3.3.0
 # cp --parents `find . -name "*.ko"` ${project}/modules/lib/modules/3.3.0

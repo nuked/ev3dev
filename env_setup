@@ -4,15 +4,14 @@
 #******************************************************************************************************************
 # as normal user on linux pc terminal:
 
-export AM1808_COMPILER="${project}/../bin/arm-2011.03/bin"
+export AM1808_COMPILER="/home/frmb/CodeSourcery/Sourcery_G++_Lite_2011.03-42/bin"
 
-export LEGO_AM1808_DISTRO="lego-DaVinci-PSP-SDK-03.20.00.13"
-export LEGO_AM1808_DISTRO="lego-DaVinci-PSP-SDK-03.20.00.13"
+export LEGO_AM1808_DISTRO="/home/frmb/research/ev3/ev3sources"
 export LEGO_AM1808_LINUX="linux-03.20.00.13"
 export LEGO_AM1808_UBOOT="uboot-03.20.00.13"
 export LEGO_AM1808_ABI="arm-none-eabi-"
 
-export LEGO_AM1808_KERNEL="/opt/${LEGO_AM1808_DISTRO}/src/kernel/${LEGO_AM1808_LINUX}"
+export LEGO_AM1808_KERNEL="${LEGO_AM1808_DISTRO}/extra/${LEGO_AM1808_LINUX}"
 
 export EV3DEV_AM1808_ROOT="${project}"
 export EV3DEV_AM1808_DISTRO=".."
