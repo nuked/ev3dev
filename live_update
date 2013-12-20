@@ -1,0 +1,53 @@
+#! /bin/bash
+
+KIMAGE="./uImage"
+MODPATH="./modules"
+MODTAR="./modules.tar"
+KRELEASE="3.3.0+"
+
+if [ $# -lt 2 ]; then
+	printf 'usage: %s <user@hostname> <rpath>\n' "$0"
+	printf '\ne.g.: %s root@ev3 /\n' "$0"
+	exit 1
+fi
+
+if [ ! -r $KIMAGE ]; then
+	printf '%s: %s file not found\n' "$0" "$KIMAGE" 1>&2
+	exit 1
+fi
+
+if [ ! -d $MODPATH ]; then
+	printf '%s: %s directory not found\n' "$0" "$MODPATH" 1>&2
+	exit 1
+fi
+
+printf '%s: using kernel: %s\n' "$0" "$KIMAGE"
+printf '%s: using modules: %s\n' "$0" "$MODPATH"
+
+# tar-up the module directory for shipping
+(cd $MODPATH && tar cf - .) > $MODTAR
+
+if [ ! -s $MODTAR ]; then
+	printf '%s: failed to tar-up modules..\n' "$0"
+	rm -f $MODTAR
+	exit 1
+fi
+
+printf 'copying and unpacking modules...\n'
+
+RCMD=$(printf '(cd %s && tar xvf -)' "$2")
+cat $MODTAR | ssh $1 "$RCMD"
+
+printf 'running depmod on EV3...\n'
+
+RCMD=$(printf '(cd %slib/modules/%s/ && depmod)' "$2" "$KRELEASE")
+ssh $1 "$RCMD"
+RCMD=$(printf '(cd %s && chown -R root.root lib)' "$2")
+ssh $1 "$RCMD"
+
+printf 'saving existing image, copying new...\n'
+
+RCMD=$(printf '(cd /media/mmc_p1/ && mv -v uImage uImage.old)')
+ssh $1 "$RCMD"
+scp "$KIMAGE" "$1:/media/mmc_p1/uImage"
+
