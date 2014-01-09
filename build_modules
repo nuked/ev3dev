@@ -35,7 +35,7 @@ if [ ! -e ./modules/lib/modules/${AM1808_KERNEL_RELEASE}/updates ]; then
   mkdir -p ./modules/lib/modules/${AM1808_KERNEL_RELEASE}/updates
 fi
 
-for module in "ev3dev" "ui" "pwm"
+for module in "ev3dev" "ui" "pwm" "sound"
 # for module in "ev3dev" "ui"
 # for module in "pwm" 
 do 
