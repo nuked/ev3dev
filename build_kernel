@@ -34,14 +34,32 @@ echo "Now we're in $(pwd)"
 if [ "$1" = "clean" ]
 then
   make distclean ARCH=arm CROSS_COMPILE=${AM1808_ABI}
-  cp ${project}/ev3dev.config ${AM1808_KERNEL}/.config
+  cp -v ${project}/ev3dev.config ${AM1808_KERNEL}/.config
+  exit 0
 fi
 
 if [ "$1" = "modules" ]
 then
   make modules ARCH=arm CROSS_COMPILE=${AM1808_ABI}
-  exit
+  exit 0
 fi
+
+if [ "$1" = "oldconfig" ]
+then
+  make oldconfig ARCH=arm CROSS_COMPILE=${AM1808_ABI}
+  exit 0
+fi
+
+if [ "$1" = "menuconfig" ]
+then
+  make menuconfig ARCH=arm CROSS_COMPILE=${AM1808_ABI}
+  if [ ${AM1808_KERNEL}/.config -nt ${project}/ev3dev.config ]; then
+    printf 'Updating local config..\n'
+    cp -v ${AM1808_KERNEL}/.config ${project}/ev3dev.config
+  fi
+  exit 0
+fi
+
 
 if [ "$1" = "modules_install" ]
 then
@@ -49,9 +67,9 @@ then
   rm ${project}/modules/lib/modules/3.3.0+/build
   rm ${project}/modules/lib/modules/3.3.0+/source
 
-# mkdir -p ${project}/modules/lib/modules/3.3.0
-# cp --parents `find . -name "*.ko"` ${project}/modules/lib/modules/3.3.0
-exit
+  # mkdir -p ${project}/modules/lib/modules/3.3.0
+  # cp --parents `find . -name "*.ko"` ${project}/modules/lib/modules/3.3.0
+  exit 0
 fi
 
 cp ${project}/ev3dev.config ${AM1808_KERNEL}/.config
